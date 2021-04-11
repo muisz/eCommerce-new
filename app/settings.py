@@ -25,7 +25,7 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*rpwy+^q0!4(e)!x=+*qefmf!9(wyhznbkdr&csy60fpm0%*yy'
+SECRET_KEY = env.str('SECRET_KEY', default='*rpwy+^q0!4(e)!x=+*qefmf!9(wyhznbkdr&csy60fpm0%*yy')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # main apps
-    'main'
+    'main',
+    'utils',
+    'api_url'
 ]
 
 MIDDLEWARE = [

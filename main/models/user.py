@@ -18,7 +18,7 @@ class Customers(models.Model):
         db_table = "customers"
 
 class CustomerAddress(models.Model):
-    customer_id = models.IntegerField()
+    customer_id = models.IntegerField(null=True)
     default = models.BooleanField(default=False)
     provinsi = models.CharField(max_length=100)
     kabupaten = models.CharField(max_length=100)
