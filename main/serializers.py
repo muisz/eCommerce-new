@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models.user import Customers, CustomerAddress, Sellers
+from .models.user import Customers, CustomerAddress, Sellers, Merchants
+from .models.product import Categories, Products
+
+# user
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,3 +19,20 @@ class SellerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Sellers
 		fields = '__all__'
+
+class MerchantSerializer(serializers.ModelSerializer):
+    address = serializers.JSONField()
+    class Meta:
+        model = Merchants
+        fields = ['id', 'customer_id', 'name', 'image', 'description', 'address', 'date_created', 'time_created']
+
+# product
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categories
+        fields = '__all__'
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Products
+        fields = '__all__'

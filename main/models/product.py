@@ -13,27 +13,13 @@ class Products(models.Model):
     price = models.FloatField()
     stocks = models.IntegerField(default=1)
     category_id = models.IntegerField()
+    varian = models.TextField(null=True, default='[]')
+    media = models.TextField(null=True, default='[]')
     date_created = models.DateField(auto_now_add=True)
     time_created = models.TimeField(auto_now_add=True)
 
     class Meta:
         db_table = "products"
-
-class ProductVarians(models.Model):
-    product_id = models.IntegerField()
-    name = models.CharField(max_length=100)
-    value = models.CharField(max_length=100)
-    value_is_number = models.BooleanField(default=False)
-    
-    class Meta:
-        db_table = "product_varians"
-
-class ProductMedia(models.Model):
-    product_id = models.IntegerField()
-    image = models.FileField(upload_to=product_media_path)
-    
-    class Meta:
-        db_table = "product_media"
 
 class ProductSpecifications(models.Model):
     product_id = models.IntegerField()
@@ -65,29 +51,12 @@ class Orders(models.Model):
     is_pay = models.BooleanField(default=False)
     date_pay = models.DateField(null=True)
     time_pay = models.TimeField(null=True)
+    additional_fee = models.TextField(null=True, default='[]')
     date_created = models.DateField(auto_now_add=True)
     time_created = models.TimeField(auto_now_add=True)
     
     class Meta:
         db_table = "orders"
-
-class AdditionalFees(models.Model):
-    order_id = models.IntegerField()
-    name = models.CharField(max_length=100)
-    value = models.FloatField()
-    reference = models.CharField(max_length=100)
-    
-    class Meta:
-        db_table = "order_additional_fees"
-
-class SubtractionFees(models.Model):
-    order_id = models.IntegerField()
-    name = models.CharField(max_length=100)
-    value = models.FloatField()
-    reference = models.CharField(max_length=100)
-    
-    class Meta:
-        db_table = "order_subtraction_fees"
 
 class Promo(models.Model):
     name = models.CharField(max_length=100)
