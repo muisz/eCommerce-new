@@ -1,11 +1,12 @@
 from django.conf import settings
+from django.db import connections
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..models.user import Customers, CustomerAddress, Sellers, Merchants
 from ..models.product import Products, ProductSpecifications, ProductTags, Categories, Orders, Promo, Vouchers
 from ..serializers import CustomerSerializer, CustomerAddressSerializer, SellerSerializer, MerchantSerializer, CategorySerializer, ProductSerializer
 from utils.response import AssertionErrorResponse, ErrorResponse, SuccessResponse
-from utils.utils import generateHash, checkIsExists, getPaginate
+from utils.utils import generateHash, checkIsExists, getPaginate, dictfetchall, query
 import json
 import uuid
 import os
@@ -154,4 +155,38 @@ class ProductView(APIView):
 		except:
 			return ErrorResponse("BadRequest")
 
-	# def get(self, request):
+	def get(self, request):
+		try:
+			params = request.GET
+			products = Products.objects.all()
+			paginated = getPaginate(request, products, pageQueryName='page', sizeQueryName='page_size')
+			return SuccessResponse({
+				"data": ProductSerializer(paginated['data'], many=True).data,
+				"meta": paginated['meta']
+			})
+
+		except AssertionError as error:
+			return AssertionErrorResponse(str(error))
+
+class ProductDetailView(APIView):
+	def get(self, request, id):
+		try:
+			sql = """
+				SELECT products.id, products.name, products.description, products.price, products.stocks, products.varian, products.media, products.date_created, products.time_created,
+						merchants.id as merchant_id, merchants.name as merchant_name, merchants.address as merchant_address, product_categories.id as category_id, product_categories.name as categories
+				FROM ((products INNER JOIN merchants ON products.merchant_id = merchants.id) INNER JOIN product_categories ON products.category_id = product_categories.id)
+				WHERE products.id = '{}'
+			""".format(id)
+			result = query(sql, False)
+			result['varian'] = json.loads(result['varian'])
+			result['media'] = json.loads(result['media'])
+
+			spec_sql = """
+				SELECT * FROM product_specifications WHERE product_id = '{}'
+			""".format(id)
+			result['specifications'] = query(spec_sql)
+			return SuccessResponse({'data':result})
+
+
+		except AssertionError as error:
+			return AssertionErrorResponse(str(error))

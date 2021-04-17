@@ -2,6 +2,7 @@ import uuid
 import hashlib
 import random
 from django.conf import settings
+from django.db import connections
 from main.models.product import References
 
 def storeRefCode(initial, id):
@@ -98,3 +99,12 @@ def paginate(data, page, page_size):
                     'current': '0-0-0'
                 }
             }
+
+def query(sql, many=True):
+    result = []
+    with connections['default'].cursor() as cursor:
+        cursor.execute(sql)
+        result = dictfetchall(cursor)
+    if not many:
+        return result[0]
+    return result
