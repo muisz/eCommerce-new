@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models.user import Customers, CustomerAddress, Sellers, Merchants
+from .models.user import Customers, CustomerAddress, Sellers, Merchants, Carts
 from .models.product import Categories, Products
 
 # user
@@ -25,6 +25,12 @@ class MerchantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchants
         fields = ['id', 'customer_id', 'name', 'image', 'description', 'address', 'date_created', 'time_created']
+
+class CartSerializer(serializers.ModelSerializer):
+    varian = serializers.JSONField()
+    class Meta:
+        model = Carts
+        fields = ['id', 'customer_id', 'product_id', 'name', 'quantity', 'varian', 'price', 'date_created']
 
 # product
 class CategorySerializer(serializers.ModelSerializer):

@@ -49,3 +49,14 @@ class Merchants(models.Model):
     class Meta:
         db_table = "merchants"
 
+class Carts(models.Model):
+    customer_id = models.IntegerField()
+    product_id = models.IntegerField()
+    name = models.CharField(max_length=100)
+    quantity = models.IntegerField(default=1)
+    varian = models.TextField(null=True)
+    price = models.FloatField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "carts"
