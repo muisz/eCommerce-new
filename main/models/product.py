@@ -1,9 +1,15 @@
 from django.db import models
+import uuid
 
 product_media_path = "product/%Y/%m/"
 supplier_choices = (
     ('app', 'app'), # app which mean this or our company that own this service
     ('merchant', 'merchant')
+)
+payment_status = (
+    ('checkout', 'checkout'),
+    ('fail', 'fail'),
+    ('success', 'success'),
 )
 
 class Products(models.Model):
@@ -48,10 +54,15 @@ class Orders(models.Model):
     customer_id  = models.IntegerField()
     pre_total = models.FloatField()
     total = models.FloatField()
-    is_pay = models.BooleanField(default=False)
+    payment_status = models.CharField(max_length=100, choices=payment_status, default="checkout")
     date_pay = models.DateField(null=True)
     time_pay = models.TimeField(null=True)
     additional_fee = models.TextField(null=True, default='[]')
+    payment_data = models.TextField(null=True)
+    shipment_data = models.TextField(null=True)
+    invoice = models.UUIDField(default=uuid.uuid4)
+    order_status = models.CharField(max_length=100, default='menunggu pembayaran', null=True)
+    order_status_update = models.DateTimeField(null=True)
     date_created = models.DateField(auto_now_add=True)
     time_created = models.TimeField(auto_now_add=True)
     

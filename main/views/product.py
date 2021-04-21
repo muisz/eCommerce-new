@@ -125,7 +125,8 @@ class ProductView(APIView):
 						try:
 							temp = ProductTags.objects.create(
 								product_id = product.id,
-								name = tag['name']
+								# name = tag['name']
+								name = tag
 							)
 							product_tags.append(temp)
 
@@ -185,6 +186,7 @@ class ProductDetailView(APIView):
 				SELECT * FROM product_specifications WHERE product_id = '{}'
 			""".format(id)
 			result['specifications'] = query(spec_sql)
+			result['tags'] = query("SELECT * FROM product_tags WHERE product_id = '{}'".format(id))
 			return SuccessResponse({'data':result})
 
 
