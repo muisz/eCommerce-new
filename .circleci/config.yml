@@ -1,0 +1,53 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+        auth:
+          username: $DOCKER_ID
+          password: $DOCKER_PASSWORD
+      
+      - image: circleci/postgres
+        auth:
+          username: $DOCKER_ID
+          password: $DOCKER_PASSWORD
+        environment:
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: django_test
+    
+    environment:
+      DEBUG: True
+      DB_ENGINE: django.db.backends.postgresql
+      DB_USER: postgres
+      DB_PASSWORD: mypassword
+      DB_NAME: django_test
+      DB_HOST: db
+      DB_PORT: 5432
+    
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
+      - run:
+          name: "Install dependencies"
+          command: |
+            sudo pip install -r requirements.txt
+      - run:
+          name: "Migrate database"
+          command: |
+            python manage.py migrate
+      - run:
+          name: "Test app"
+          command: |
+            python manage.py test
+
+
+workflows:
+  build-python:
+    jobs:
+      - build:
+          context: testing
