@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     # main apps
     'main',
     'utils',
-    'api_url'
+    'api_url',
+    'vendors'
 ]
 
 MIDDLEWARE = [

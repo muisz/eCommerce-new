@@ -7,6 +7,7 @@ from ..serializers import CustomerSerializer, CustomerAddressSerializer, SellerS
 from utils.response import AssertionErrorResponse, ErrorResponse, SuccessResponse
 from utils.utils import generateHash, checkIsExists, getPaginate, query
 import json
+import requests
 
 class CustomerView(APIView):
     def post(self, request):

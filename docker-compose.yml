@@ -1,0 +1,41 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    
+    environment:
+      POSTGRES_PASSWORD: pa$$w0rd
+      POSTGRES_DB: django_test
+
+    ports:
+      - "5432:5432"
+    
+    networks:
+      - main_network
+
+  web:
+    build: .
+
+    command: python manage.py runserver 0.0.0.0:8000
+    
+    depends_on:
+      - db
+    
+    environment:
+      - DEBUG=True
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_USER=postgres
+      - DB_PASSWORD=pa$$w0rd
+      - DB_NAME=django_test
+      - DB_HOST=db
+      - DB_PORT=5432
+
+    ports:
+      - "8000:8000"
+
+    networks:
+      - main_network
+
+networks:
+  main_network:
+    name: main_network
